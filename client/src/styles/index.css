@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    @apply h-full;
+  }
+  body {
+    @apply bg-bg-0 text-ink-1 font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: rgba(139, 108, 246, 0.35);
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.12);
+    background-clip: padding-box;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-bg-1 border border-line rounded-xl;
+  }
+  .panel-soft {
+    @apply bg-bg-2 border border-line-soft rounded-lg;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-bg-3 border border-line-soft text-ink-1 text-xs;
+  }
+  .chip-violet {
+    @apply bg-accent-violet/10 border-accent-violet/30 text-accent-violet;
+  }
+  .chip-red {
+    @apply bg-accent-red/10 border-accent-red/30 text-accent-red;
+  }
+  .chip-yellow {
+    @apply bg-accent-yellow/10 border-accent-yellow/30 text-accent-yellow;
+  }
+  .chip-green {
+    @apply bg-accent-green/10 border-accent-green/30 text-accent-green;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md
+           bg-bg-3 border border-line-soft text-ink-1 hover:bg-bg-4 hover:text-ink-0 transition-colors;
+  }
+  .btn-primary {
+    @apply text-white border-transparent
+           bg-gradient-to-b from-accent-violet to-accent-violetSoft
+           hover:from-accent-violet hover:to-accent-violet
+           shadow-[0_4px_18px_-6px_rgba(139,108,246,0.7)];
+  }
+  .btn-ghost {
+    @apply bg-transparent border-transparent hover:bg-bg-3 hover:text-ink-0;
+  }
+  .input {
+    @apply w-full bg-bg-2 border border-line-soft rounded-md px-2.5 py-1.5 text-xs text-ink-0
+           placeholder:text-ink-3 focus:outline-none focus:ring-1 focus:ring-accent-violet/50 focus:border-accent-violet/50;
+  }
+  .section-title {
+    @apply text-[11px] font-semibold tracking-[0.14em] text-ink-2 uppercase;
+  }
+  .divider {
+    @apply h-px bg-line;
+  }
+  .pulse-dot {
+    @apply inline-block w-1.5 h-1.5 rounded-full;
+  }
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.25); }
+}
+.pulse-dot {
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+/* React Flow theme overrides */
+.react-flow__renderer { background: transparent; }
+.react-flow__background { opacity: 0.5; }
+.react-flow__edge-path {
+  stroke: #3a3f5c;
+  stroke-width: 1.4;
+}
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #8b6cf6;
+}
+.react-flow__edge-text {
+  fill: #c8ccdb !important;
+  font-size: 10px !important;
+}
+.react-flow__edge-textbg {
+  fill: #141621 !important;
+}
+.react-flow__handle {
+  background: #5e6378;
+  border: 2px solid #0f1117;
+  width: 9px;
+  height: 9px;
+}
+.react-flow__handle:hover {
+  background: #8b6cf6;
+}
+.react-flow__controls,
+.react-flow__minimap {
+  background: rgba(15, 17, 23, 0.85) !important;
+  border: 1px solid #262a3d !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 24px -8px rgba(0,0,0,0.6);
+}
+.react-flow__controls-button {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #262a3d !important;
+  color: #c8ccdb !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+.react-flow__controls-button:hover {
+  background: #1a1d2b !important;
+  color: #f5f6fa !important;
+}
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
+.react-flow__minimap {
+  width: 180px !important;
+  height: 110px !important;
+}
+.react-flow__attribution { display: none; }
+.react-flow__panel { color: #8a90a8; }
+
+/* =============================================================== */
+/* Light theme overrides — applied when html.light is set on root.  */
+/* The dark theme is the default; light is an explicit re-skin via */
+/* class-targeted overrides so we don't have to change every       */
+/* component class.                                                 */
+/* =============================================================== */
+html.light {
+  color-scheme: light;
+}
+html.light body {
+  background: #f4f5f9;
+  color: #2a2e3d;
+}
+html.light .bg-bg-0 { background-color: #f4f5f9 !important; }
+html.light .bg-bg-1\/90,
+html.light .bg-bg-1\/85,
+html.light .bg-bg-1\/80,
+html.light .bg-bg-1\/60,
+html.light .bg-bg-1 { background-color: #ffffff !important; }
+html.light .bg-bg-1\/95 { background-color: rgba(255,255,255,0.95) !important; }
+html.light .bg-bg-2 { background-color: #f1f3f9 !important; }
+html.light .bg-bg-3 { background-color: #e6e9f1 !important; }
+html.light .bg-bg-3\/30 { background-color: rgba(230,233,241,0.45) !important; }
+html.light .bg-bg-3\/40 { background-color: rgba(230,233,241,0.6) !important; }
+html.light .bg-bg-3\/50 { background-color: rgba(230,233,241,0.7) !important; }
+html.light .bg-bg-4 { background-color: #d9dde8 !important; }
+
+html.light .text-ink-0 { color: #1a1d2b !important; }
+html.light .text-ink-1 { color: #353a4b !important; }
+html.light .text-ink-2 { color: #5e6378 !important; }
+html.light .text-ink-3 { color: #8a90a8 !important; }
+
+html.light .border-line { border-color: #d6dae5 !important; }
+html.light .border-line-soft { border-color: #e3e6ee !important; }
+
+html.light *::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+html.light *::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+/* React Flow light overrides */
+html.light .react-flow__edge-path { stroke: #c1c5d2; }
+html.light .react-flow__edge-text { fill: #2a2e3d !important; }
+html.light .react-flow__edge-textbg { fill: #f1f3f9 !important; }
+html.light .react-flow__handle { border-color: #ffffff; background: #8a90a8; }
+html.light .react-flow__controls,
+html.light .react-flow__minimap {
+  background: rgba(255,255,255,0.92) !important;
+  border-color: #d6dae5 !important;
+  box-shadow: 0 4px 24px -8px rgba(0,0,0,0.18) !important;
+}
+html.light .react-flow__controls-button {
+  border-bottom-color: #e3e6ee !important;
+  color: #353a4b !important;
+}
+html.light .react-flow__controls-button:hover {
+  background: #f1f3f9 !important;
+  color: #1a1d2b !important;
+}
