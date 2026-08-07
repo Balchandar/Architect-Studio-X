@@ -96,6 +96,7 @@ export default function DiffViewerView() {
           value={compareRightId ?? ''}
           onChange={(e) => setCompare(compareLeftId, e.target.value || null)}
         >
+          <option value="">— (none)</option>
           {versions.map((v) => (
             <option key={v.id} value={v.id}>
               {v.label} · {fmtDate(v.createdAt)}

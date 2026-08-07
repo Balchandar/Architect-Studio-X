@@ -46,10 +46,12 @@ export const useInsightsStore = create<InsightsState>((set) => ({
     set({ bundle: EMPTY_BUNDLE, validated: false, lastValidatedAt: null }),
 }));
 
-// When the graph changes, the cached insights become stale — drop back to
-// the idle state so the right panel re-prompts the user to validate.
+// When the graph changes *semantically*, the cached insights become stale —
+// drop back to the idle state so the right panel re-prompts the user to
+// validate. Keying off semanticRev (not graph identity) means cosmetic node
+// drags and auto-layout no longer wipe validated insights.
 useGraphStore.subscribe((state, prev) => {
-  if (state.graph !== prev.graph) {
+  if (state.semanticRev !== prev.semanticRev) {
     useInsightsStore.setState({
       bundle: EMPTY_BUNDLE,
       validated: false,

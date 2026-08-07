@@ -56,8 +56,13 @@ export default function VersionHistoryView() {
                     }
                   }}
                   onClick={() => {
-                    const otherIdx = sorted.findIndex((x) => x.id !== v.id);
-                    setCompare(sorted[otherIdx]?.id ?? null, v.id);
+                    // Compare the clicked version (target / right) against the
+                    // version immediately older than it (base / left). `sorted`
+                    // is newest-first, so the predecessor sits at idx + 1. The
+                    // oldest version has no predecessor → base is the initial
+                    // empty state (null).
+                    const idx = sorted.findIndex((x) => x.id === v.id);
+                    setCompare(sorted[idx + 1]?.id ?? null, v.id);
                   }}
                   className={clsx(
                     'w-full flex items-start gap-2 px-3 py-2 hover:bg-bg-3/40 text-left',

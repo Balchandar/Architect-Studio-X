@@ -214,14 +214,20 @@ export function diffGraphs(
     }
   }
 
+  const beforeRegions = [...(before.metadata.regions ?? [])].sort().join(',');
+  const afterRegions = [...(after.metadata.regions ?? [])].sort().join(',');
   if (
     before.metadata.name !== after.metadata.name ||
-    before.metadata.description !== after.metadata.description
+    before.metadata.description !== after.metadata.description ||
+    beforeRegions !== afterRegions
   ) {
     out.push({
       kind: 'metadata-changed',
       label: 'Metadata changed',
-      detail: after.metadata.name,
+      detail:
+        beforeRegions !== afterRegions
+          ? `regions: ${afterRegions || '—'}`
+          : after.metadata.name,
     });
   }
   return out;
