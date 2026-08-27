@@ -36,13 +36,15 @@ function estimateCost(graph: ArchitectureGraph): CostEstimate {
   for (const li of lineItems) {
     aggregated.set(li.name, (aggregated.get(li.name) ?? 0) + li.monthly);
   }
-  const top = [...aggregated.entries()]
+  const ranked = [...aggregated.entries()]
     .map(([name, monthly]) => ({ name, monthly }))
-    .sort((a, b) => b.monthly - a.monthly)
-    .slice(0, 5);
+    .sort((a, b) => b.monthly - a.monthly);
 
-  const monthlyTotal = top.reduce((sum, t) => sum + t.monthly, 0);
-  return { monthlyTotal, currency: 'USD', topContributors: top };
+  // Total must cover every line item; only the displayed contributor list is
+  // truncated to the top few.
+  const monthlyTotal = ranked.reduce((sum, t) => sum + t.monthly, 0);
+  const topContributors = ranked.slice(0, 5);
+  return { monthlyTotal, currency: 'USD', topContributors };
 }
 
 function tradeoffInsights(graph: ArchitectureGraph): Insight[] {

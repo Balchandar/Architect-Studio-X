@@ -116,6 +116,50 @@ describe('mutation executor — update_security / update_runtime', () => {
   });
 });
 
+describe('mutation executor — add_region', () => {
+  it('records the region on metadata even with no target services', () => {
+    const next = applyMutation(
+      sampleGraph(),
+      createMutation('add_region', { region: 'eu-west-1', applyToServiceIds: [] }),
+    );
+    expect(next.metadata.regions).toContain('eu-west-1');
+    // No service ids given → service regions are left untouched.
+    expect(next.services.every((s) => s.region === 'us-east-1')).toBe(true);
+  });
+
+  it('relabels the named services and records the region', () => {
+    const next = applyMutation(
+      sampleGraph(),
+      createMutation('add_region', { region: 'eu-west-1', applyToServiceIds: ['svc'] }),
+    );
+    expect(next.services.find((s) => s.id === 'svc')!.region).toBe('eu-west-1');
+    expect(next.services.find((s) => s.id === 'db')!.region).toBe('us-east-1');
+    expect(next.metadata.regions).toContain('eu-west-1');
+  });
+
+  it('does not duplicate a region already recorded', () => {
+    const once = applyMutation(
+      sampleGraph(),
+      createMutation('add_region', { region: 'eu-west-1' }),
+    );
+    const twice = applyMutation(
+      once,
+      createMutation('add_region', { region: 'eu-west-1' }),
+    );
+    expect(twice.metadata.regions).toEqual(['eu-west-1']);
+  });
+
+  it('throws when region is missing', () => {
+    expect(() =>
+      applyMutation(
+        sampleGraph(),
+        // @ts-expect-error intentional bad payload
+        createMutation('add_region', { applyToServiceIds: [] }),
+      ),
+    ).toThrow();
+  });
+});
+
 describe('applyPlan — atomicity', () => {
   it('rejects the entire plan if any mutation is invalid', () => {
     const plan = createPlan('mixed', [

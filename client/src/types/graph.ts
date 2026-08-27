@@ -100,6 +100,9 @@ export interface GraphMetadata {
   description?: string;
   updatedAt: string;
   createdAt: string;
+  /** Regions this architecture declares it spans. Populated by add_region
+   *  (including when no specific services are relabeled). */
+  regions?: Region[];
 }
 
 export interface ArchitectureGraph {

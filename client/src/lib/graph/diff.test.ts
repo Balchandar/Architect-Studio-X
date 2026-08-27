@@ -41,6 +41,15 @@ describe('diffGraphs', () => {
     expect(modified?.detail).toMatch(/region moved/);
   });
 
+  it('reports a metadata change when declared regions differ', () => {
+    const before = sampleGraph();
+    const after = structuredClone(before);
+    after.metadata.regions = ['eu-west-1'];
+    const entries = diffGraphs(before, after);
+    const meta = entries.find((e) => e.kind === 'metadata-changed');
+    expect(meta?.detail).toMatch(/regions: eu-west-1/);
+  });
+
   it('reports a removed connection', () => {
     const before = sampleGraph();
     const after = structuredClone(before);

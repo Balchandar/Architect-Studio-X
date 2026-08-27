@@ -29,6 +29,11 @@ function clone<T>(x: T): T {
 
 interface GraphState {
   graph: ArchitectureGraph;
+  /** Monotonic counter bumped on every *semantic* graph change (services,
+   *  connections, constraints, decisions, name). Purely cosmetic updates —
+   *  node drags, auto-layout — deliberately leave it untouched so downstream
+   *  subscribers (e.g. the insights store) can ignore them. */
+  semanticRev: number;
   selectedNodeId: string | null;
   selectedConnectionId: string | null;
   highlightedNodeIds: string[];
@@ -84,8 +89,15 @@ export const useGraphStore = create<GraphState>((set, get) => {
     }));
   }
 
+  /** Advance the semantic revision. Call from every path that changes graph
+   *  meaning; skip it for position-only / layout updates. */
+  function bumpRev() {
+    set((s) => ({ semanticRev: s.semanticRev + 1 }));
+  }
+
   return {
     graph: initialGraph,
+    semanticRev: 0,
     selectedNodeId: null,
     selectedConnectionId: null,
     highlightedNodeIds: [],
@@ -100,6 +112,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
       set({
         graph: { ...graph, metadata: { ...graph.metadata, updatedAt: new Date().toISOString() } },
       });
+      bumpRev();
     },
 
     setGraphName: (name) => {
@@ -110,6 +123,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
           metadata: { ...s.graph.metadata, name, updatedAt: new Date().toISOString() },
         },
       }));
+      bumpRev();
     },
 
     autoLayout: () => set({ graph: applyLayout(get().graph) }),
@@ -125,6 +139,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
         const next = applyMutation(before, mutation);
         pushHistory();
         set({ graph: next });
+        bumpRev();
         return { ok: true, applied: [mutation], errors: [] };
       } catch (err) {
         return {
@@ -140,6 +155,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
       if (result.ok) {
         pushHistory();
         set({ graph: next });
+        bumpRev();
       }
       return result;
     },
@@ -149,6 +165,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
       if (result.ok) {
         pushHistory();
         set({ graph: next });
+        bumpRev();
       }
       return result;
     },
@@ -164,6 +181,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
         selectedNodeId: null,
         selectedConnectionId: null,
       });
+      bumpRev();
       return true;
     },
 
@@ -178,6 +196,7 @@ export const useGraphStore = create<GraphState>((set, get) => {
         selectedNodeId: null,
         selectedConnectionId: null,
       });
+      bumpRev();
       return true;
     },
 

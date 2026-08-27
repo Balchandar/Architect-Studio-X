@@ -201,14 +201,17 @@ export function applyMutation(
       const services = ids.size
         ? graph.services.map((s) => (ids.has(s.id) ? { ...s, region: p.region } : s))
         : graph.services;
+      // Record the region on metadata (deduped) so the change is meaningful
+      // even when no specific services are relabeled — this is the documented
+      // "region recorded on metadata only" behavior for an empty id list.
+      const regions = graph.metadata.regions ?? [];
+      const nextRegions = regions.includes(p.region) ? regions : [...regions, p.region];
       return bumpUpdatedAt({
         ...graph,
         services,
         metadata: {
           ...graph.metadata,
-          description: graph.metadata.description
-            ? `${graph.metadata.description}`
-            : graph.metadata.description,
+          regions: nextRegions,
         },
       });
     }
