@@ -1,3 +1,5 @@
+
+
 # Architect Studio X
 
 A visual architecture workspace where you design systems on a canvas,
@@ -209,6 +211,7 @@ falls back to the offline Demo Planner.
 npm run dev         # client + server concurrently
 npm run typecheck   # client + server tsc --noEmit
 npm run build       # client (vite) + server (tsc)
+npm run start       # production server (requires build)
 npm run test -w client   # Vitest suite (mutations, rules, planner, diff)
 ```
 
